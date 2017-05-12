@@ -83,7 +83,7 @@ def model():
     acc = round(svc.score(X_test, y_test), 4)
     t2 = time.time()
     print('Test Accuracy of SVC = ',acc, ' Took {}(sec):'.format(round(t2-t, 2)) )
-    filename = 'vehicle_detecor_model.sav'
+    filename = 'vehicle_detector_model.sav'
     pickle.dump(svc, open(filename, 'wb'))
     print(u'\u2713' , 'Model Saved !')
 
