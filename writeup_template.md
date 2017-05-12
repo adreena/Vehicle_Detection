@@ -1,46 +1,101 @@
-##Writeup Template
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Vehicle Detection Project**
 
 The goals / steps of this project are the following:
 
-* Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier Linear SVM classifier
-* Optionally, you can also apply a color transform and append binned color features, as well as histograms of color, to your HOG feature vector. 
-* Note: for those first two steps don't forget to normalize your features and randomize a selection for training and testing.
-* Implement a sliding-window technique and use your trained classifier to search for vehicles in images.
-* Run your pipeline on a video stream (start with the test_video.mp4 and later implement on full project_video.mp4) and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
-* Estimate a bounding box for vehicles detected.
+* Step 1: Loading and splitting images for training and testing
+* Step 2: Extracting features from training set images
+* Step 3: Training classifier LinearSVM on the extracted features
+* Step 4: Calculating accuracy of the model using test set images
+* Step 5: Searching for vehicles by sliding window over the image and using trained model
+* Step 6: Comparing new detected vehicles with the vehicles from the previous frames and merging bounding-boxes if necessary, using heatmap and boxes' areas
+* Step 7: Avoiding false positive bounding boxes to appear on the frames
+* Step 6: Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
-[//]: # (Image References)
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
+Goals:
+* Developing a robust pipeline to detect vehicles on the road
+
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
-###Writeup / README
+### Data
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
+As it was pointed out in the Tips and Tricks for The Project, dataset images are extracted from video which results in almost identical images in a sequence of frames. Even shuffling and splitting the data in a random manner causes overfitting because images in the training set may be nearly identical to images in the test set. To overcome this issue, I take the first 80% of the images of each category and put them in training set and leave the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. 
 
-You're reading it!
+(code : model.py > collect_data())
 
-###Histogram of Oriented Gradients (HOG)
+ ---------------------------------------------
+|Train samples | cars: 7032 | not_cars: 7174  |
+|---------------------------------------------|
+|Test samples  | cars: 1760 | not_cars: 1794  |
+ ---------------------------------------------
+ 
+ To generate more data, I added flipped images to each set under the same label, here is an example of a car-image an its flipped version 
+ 
+ (code : features.py > process_features() > 110-118):
+ 
+ <table style="width:100%">
+  <tr>
+    <td>Original</td>
+    <td>Flipped</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+</table>
 
-####1. Explain how (and identify where in your code) you extracted HOG features from the training images.
+Total number of images after adding flipped images (cars+not-cars):
+ -----------------------------------------
+|Train set | X_train:28412 y_train:28412  |
+|-----------------------------------------|
+|Test set  | X_test: 3554 y_test:3554     |
+ -----------------------------------------
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+### Features
+
+After preparing the sets, I converted images to `YCrCb` color-space and collected 3 different sets of features including:
+
+### 1.Spatial Features
+
+Original images size is (64, 64, 3) and contains good spatial features in each channel by showing how target object looks like, but collecting all features for all channels would generate a lot of features and slow down the classifier, yet resizing them to (32,32,3) keeps important spatial features in finding vehicles and reduces the feature-set size significantly:
+ 
+ (code : features.py > bin_spatial()):
+
+<table style="width:100%">
+  <tr>
+    <td>Original(64x64x3)</td>
+    <td>Shrinked (32x32x3)</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+</table>
+
+### 2.Histogram Featurs
+
+Individual histogram of the color channels is another source of information to help classifier detect structures/edges despite the variety of colors. I collected histogram features of all 3 channels : WHY 32???
+(code : features.py > color_hist())
+<table style="width:100%">
+  <tr>
+    <td>Original(64x64x3)</td>
+    <td>Channel 1</td>
+    <td>Channel 2</td>
+    <td>Channel 3</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+     <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+</table>
+
+
+### 3.Histogram of Oriented Gradients (HOG)
 
 ![alt text][image1]
 
