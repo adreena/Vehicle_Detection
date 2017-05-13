@@ -25,60 +25,73 @@ As it was pointed out in the Tips and Tricks for The Project, dataset images are
 
 * `model1.p`, for my first model I gathered features from all of the images and used `train_test_split` to split data randomly into training-set and test-set. I then trained my LinearSVC() using YCrCB color space. Although I could see more bounding-boxes in my heatmaps, I observed a ton of false positives happening in the same wrong spot of the road sequentially! Increasing or decreasing the light in the frames just resulted in more false positives.
 
-* `model2.p`: To overcome this issue, I took the first `80%` of the images of each category [GTI_Far, GTI_Left, GTI_MiddleClose, GTI_Right, GTI_extracted, KITTI_extracted] as my training set, and left the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. (code : model.py > collect_data())
-
- here is an example of a car-image an its flipped version :
+* `model2.p`: To overcome this issue, I took the first `80%` of the images of each category [GTI_Far, GTI_Left, GTI_MiddleClose, GTI_Right, GTI_extracted, KITTI_extracted] as my training set, and left the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. (code : model.py > collect_data()) & (flipping the images code: features.py > process_features())
  
 <table style="height: 134px; width: 612px;">
 <tbody>
-<tr style="height: 13px;">
-<td style="width: 83px; height: 13px;">&nbsp;</td>
-<td style="width: 277px; text-align: center; height: 13px;" colspan="2">&nbsp;model_2 (my good&nbsp;model)</td>
-<td style="width: 265px; text-align: center; height: 13px;" colspan="2">model_1</td>
-</tr>
-<tr style="height: 59px;">
-<td style="width: 83px; height: 59px;">Samples</td>
-<td style="width: 126px; height: 59px;">
-<p>&nbsp;train_cars: 7302</p>
-<p>&nbsp;test_cars: 1760</p>
-</td>
-<td style="width: 151px; height: 59px;">
-<p>&nbsp;train_not_cars: 7174</p>
-<p>&nbsp;test_not_cars: &nbsp;1794</p>
-</td>
-<td style="width: 101px; height: 59px;">&nbsp;cars: 8792</td>
-<td style="width: 164px; height: 59px;">&nbsp;not_cars: 8968</td>
-</tr>
-<tr style="height: 13px;">
-<td style="width: 83px; height: 13px;">Train set</td>
-<td style="width: 126px; height: 13px;">&nbsp;X_train: 28412</td>
-<td style="width: 151px; height: 13px;">&nbsp;y_train : 28412</td>
-<td style="width: 101px; height: 13px;">&nbsp;X_train:14208</td>
-<td style="width: 164px; height: 13px;">&nbsp; y_train:14208</td>
-</tr>
-<tr style="height: 13px;">
-<td style="width: 83px; height: 13px;">Test set</td>
-<td style="width: 126px; height: 13px;">&nbsp;X_test: 3554</td>
-<td style="width: 151px; height: 13px;">&nbsp;y_test : 3554</td>
-<td style="width: 101px; height: 13px;">&nbsp;X_test: 3552</td>
-<td style="width: 164px; height: 13px;">&nbsp;y_test:3552</td>
-</tr>
-<tr style="height: 13px;">
-<td style="width: 83px; height: 13px;">&nbsp;Accuracy</td>
-<td style="width: 126px; height: 13px;" colspan="2">0.9834&nbsp;&nbsp;</td>
-<td style="width: 101px; height: 13px;" colspan="2">&nbsp; 0.9907</td>
-</tr>
-<tr style="height: 13px;">
-<td style="width: 83px; height: 13px;">Training time</td>
-<td style="width: 126px; height: 13px;" colspan="2">&nbsp;10.95 sec</td>
-<td style="width: 101px; height: 13px;" colspan="2">6.26 sec</td>
-</tr>
-<tr style="height: 13px;">
-<td style="width: 83px; height: 13px;">Prediction Time for 100 label</td>
-<td style="width: 126px; height: 13px;" colspan="2">0.0009 sec</td>
-<td style="width: 101px; height: 13px;" colspan="2">0.00005</td>
-</tr>
-</tbody>
+   <tr style="height: 13px;">
+   <td style="width: 83px; height: 13px;">&nbsp;</td>
+   <td style="width: 277px; text-align: center; height: 13px;" colspan="2">&nbsp;model2.p (my good&nbsp;model)</td>
+   <td style="width: 265px; text-align: center; height: 13px;" colspan="2">model1.p</td>
+   </tr>
+   <tr style="height: 59px;">
+   <td style="width: 83px; height: 59px;">Samples</td>
+   <td style="width: 126px; height: 59px;">
+   <p>&nbsp;train_cars: 7302</p>
+   <p>&nbsp;test_cars: 1760</p>
+   </td>
+   <td style="width: 151px; height: 59px;">
+   <p>&nbsp;train_not_cars: 7174</p>
+   <p>&nbsp;test_not_cars: &nbsp;1794</p>
+   </td>
+   <td style="width: 101px; height: 59px;">&nbsp;cars: 8792</td>
+   <td style="width: 164px; height: 59px;">&nbsp;not_cars: 8968</td>
+   </tr>
+   <tr style="height: 13px;">
+   <td style="width: 83px; height: 13px;">Train set</td>
+   <td style="width: 126px; height: 13px;">&nbsp;X_train: 28412</td>
+   <td style="width: 151px; height: 13px;">&nbsp;y_train : 28412</td>
+   <td style="width: 101px; height: 13px;">&nbsp;X_train:14208</td>
+   <td style="width: 164px; height: 13px;">&nbsp; y_train:14208</td>
+   </tr>
+   <tr style="height: 13px;">
+   <td style="width: 83px; height: 13px;">Test set</td>
+   <td style="width: 126px; height: 13px;">&nbsp;X_test: 3554</td>
+   <td style="width: 151px; height: 13px;">&nbsp;y_test : 3554</td>
+   <td style="width: 101px; height: 13px;">&nbsp;X_test: 3552</td>
+   <td style="width: 164px; height: 13px;">&nbsp;y_test:3552</td>
+   </tr>
+   <tr style="height: 13px;">
+   <td style="width: 83px; height: 13px;">&nbsp;Accuracy</td>
+   <td style="width: 126px; height: 13px;" colspan="2">0.9834&nbsp;&nbsp;</td>
+   <td style="width: 101px; height: 13px;" colspan="2">&nbsp; 0.9907</td>
+   </tr>
+   <tr style="height: 13px;">
+   <td style="width: 83px; height: 13px;">Training time</td>
+   <td style="width: 126px; height: 13px;" colspan="2">&nbsp;10.95 sec</td>
+   <td style="width: 101px; height: 13px;" colspan="2">6.26 sec</td>
+   </tr>
+   <tr style="height: 13px;">
+   <td style="width: 83px; height: 13px;">Prediction Time for 100 label</td>
+   <td style="width: 126px; height: 13px;" colspan="2">0.0009 sec</td>
+   <td style="width: 101px; height: 13px;" colspan="2">0.00005 sec</td>
+   </tr>
+   </tbody>
+</table>
+
+Flipped sample image:
+
+<table style="height: 64px; width: 319px;">
+  <tbody>
+  <tr style="height: 24px;">
+  <td style="width: 141px; text-align: center; height: 24px;">Original Image</td>
+  <td style="width: 164px; height: 24px;">&nbsp;Flipped</td>
+  </tr>
+  <tr style="height: 60px;">
+  <td style="width: 141px; height: 60px;"><img src="./document/combined-1.png" width="450" height="200"/></td>
+  <td style="width: 164px; height: 60px;"><img src="./document/combined-1.png" width="450" height="200"/></td>
+  </tr>
+  </tbody>
 </table>
 
 ### Features
