@@ -14,10 +14,6 @@ The goals / steps of this project are the following:
 Goals:
 * Developing a robust pipeline to detect vehicles on the road
 
-
-## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
-
 ---
 ### 1-Data
 
@@ -232,7 +228,8 @@ As my next filtering step, I check the old_counter and the current_counter :
 
 Here's a [link to my video result](./project_output.mp4)
 
-Here's a [link to my lane_line detection combined with vehicle_detection video result](./project_output.mp4)
+Here's a [link to my lane_line detection combined with vehicle_detection video result](./project_combined_output.mp4)
+
 ---
 
 ### Discussion
