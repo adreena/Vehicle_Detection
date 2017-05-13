@@ -167,7 +167,7 @@ models are placed into 2 separated directories :
 * model1/ [model.py, model.p pipepline.py, output_images, project_output.mp4]
 * model2/ [model.py, model.p pipepline.py, output_images, project_output.mp4] **selected model**
 
-Here is just comparison of flase positives from [-] sec for both models which shows model2 is much better in finding vehicles
+Here is just comparison of flase positives at 00:08 sec for both models, model1 detects this false box for `8 consecutive` frames while model2 is doing much better, which convinced me that model2 shoudl perform better in detecting vehicles overall
 
 <table style="width:100%">
   <tr>
@@ -176,29 +176,9 @@ Here is just comparison of flase positives from [-] sec for both models which sh
     <td>model2</td>
   </tr>
   <tr>
-    <td><img src="./test_images/test2.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/test2.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/output_test2.jpg" width="450" height="200"/></td>
-  </tr>
-  <tr>
-    <td><img src="./test_images/test3.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/test3.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/output_test3.jpg" width="450" height="200"/></td>
-  </tr>
-  <tr>
-    <td><img src="./test_images/test4.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/test4.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/output_test4.jpg" width="450" height="200"/></td>
-  </tr>
-  <tr>
-    <td><img src="./test_images/test5.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/test5.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/output_test5.jpg" width="450" height="200"/></td>
-  </tr>
-  <tr>
-    <td><img src="./test_images/test6.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/test6.jpg" width="450" height="200"/></td>
-    <td><img src="./output_images/output_test6.jpg" width="450" height="200"/></td>
+    00:08
+    <td><img src="./documentation/model1" width="450" height="200"/></td>
+    <td><img src="./documentation/model2" width="450" height="200"/></td>
   </tr>
 </table>
 
