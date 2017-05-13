@@ -130,15 +130,15 @@ I trained 2 separate models just to see how I can improve vehicle detection:
    <td style="width: 83px; height: 13px;">Train set</td>
    <td style="width: 126px; height: 13px;">&nbsp;X_train: 28412</td>
    <td style="width: 151px; height: 13px;">&nbsp;y_train : 28412</td>
-   <td style="width: 101px; height: 13px;">&nbsp;X_train:14208</td>
-   <td style="width: 164px; height: 13px;">&nbsp; y_train:14208</td>
+   <td style="width: 101px; height: 13px;">&nbsp;X_train:28416</td>
+   <td style="width: 164px; height: 13px;">&nbsp; y_train:28416</td>
    </tr>
    <tr style="height: 13px;">
    <td style="width: 83px; height: 13px;">Test set</td>
    <td style="width: 126px; height: 13px;">&nbsp;X_test: 3554</td>
    <td style="width: 151px; height: 13px;">&nbsp;y_test : 3554</td>
-   <td style="width: 101px; height: 13px;">&nbsp;X_test: 3552</td>
-   <td style="width: 164px; height: 13px;">&nbsp;y_test:3552</td>
+   <td style="width: 101px; height: 13px;">&nbsp;X_test: 7104</td>
+   <td style="width: 164px; height: 13px;">&nbsp;y_test:7104</td>
    </tr>
    <tr style="height: 13px;">
    <td style="width: 83px; height: 13px;">&nbsp;Accuracy</td>
@@ -157,8 +157,8 @@ I trained 2 separate models just to see how I can improve vehicle detection:
    </tr>
    <tr style="height: 13px;">
    <td style="width: 83px; height: 13px;">Feature Vector Length</td>
-   <td style="width: 126px; height: 13px;" colspan="2">8460</td>
-   <td style="width: 101px; height: 13px;" colspan="2"> </td>
+   <td style="width: 126px; height: 13px;" colspan="2"></td>
+   <td style="width: 101px; height: 13px;" colspan="2">8460</td>
    </tr>
    </tbody>
 </table>
