@@ -148,24 +148,31 @@ def draw_labeled_bboxes(img, labels, vehicles,sequence):
         centers[car_number]=center
         in_range = False
 
-        if len(vehicles) >0:
-            for vehicle in vehicles:
-                if vehicle.covers_range2(bbox) or vehicle.covers_range(center):
-                    vehicle.count_appeared +=1
+        if sequence is True:
+            if len(vehicles) >0:
+                for vehicle in vehicles:
+                    if vehicle.covers_range2(bbox) or vehicle.covers_range(center):
+                        vehicle.count_appeared +=1
 
-                    new_bbox=((np.int(np.mean([bbox[0][0],vehicle.bbox[0][0],vehicle.bbox[0][0]])), np.int(np.mean([bbox[0][1], vehicle.bbox[0][1],vehicle.bbox[0][1]]))),\
-                              (np.int(np.mean([bbox[1][0],vehicle.bbox[1][0],vehicle.bbox[1][0]])),np.int(np.mean([bbox[1][1], vehicle.bbox[1][1],vehicle.bbox[1][1]]))))
-                    vehicle.bbox= new_bbox
-                    vehicle.center =(np.mean([new_bbox[0][0], new_bbox[0][1]]), np.mean([new_bbox[1][0], new_bbox[1][1]]))
+                        top_x = np.int(np.mean([bbox[0][0],vehicle.bbox[0][0],vehicle.bbox[0][0]]))
+                        top_y = np.int(np.mean([bbox[0][1], vehicle.bbox[0][1],vehicle.bbox[0][1]]))
+                        bottom_x = np.int(np.mean([bbox[1][0],vehicle.bbox[1][0],vehicle.bbox[1][0]]))
+                        bottom_y = np.int(np.mean([bbox[1][1], vehicle.bbox[1][1],vehicle.bbox[1][1]]))
 
-                    in_range= True
-                    break
+                        vehicle.bbox= ((top_x,top_y),(bottom_x,bottom_y))
+                        vehicle.center =(np.mean([vehicle.bbox[0][0], vehicle.bbox[0][1]]), np.mean([vehicle.bbox[1][0], vehicle.bbox[1][1]]))
 
-        if in_range is False:
+                        in_range= True
+                        break
+
+            if in_range is False:
+                new_vehicle = Vehicle(center,bbox)
+                new_vehicles.append(new_vehicle)
+        else:
+
             new_vehicle = Vehicle(center,bbox)
             new_vehicles.append(new_vehicle)
 
-    penalty = 5
 
     #filter bad vehicles except the
     if sequence is True:
@@ -190,19 +197,29 @@ def draw_labeled_bboxes(img, labels, vehicles,sequence):
                     good_vehicles.append(vehicles[i])
                 else:
                     pass
-        #add
-        good_vehicles.extend(new_vehicles)
-        for vehicle in good_vehicles:
+
+    #add
+    good_vehicles.extend(new_vehicles)
+    for vehicle in good_vehicles:
+        if sequence is True:
             if vehicle.count_appeared ==0 and vehicle.old_count_appeared ==0 and vehicle.not_updating>0:
                 pass
             else:
                 if vehicle.old_count_appeared >-1:
                     cv2.rectangle(img, vehicle.bbox[0],vehicle.bbox[1], (255,0,0), 6)
-    else:
-        print('not seq')
-        good_vehicles.extend(new_vehicles)
-        for vehicle in good_vehicles:
+        else:
             cv2.rectangle(img, vehicle.bbox[0],vehicle.bbox[1], (255,0,0), 6)
 
     # Return the image
     return img, centers, good_vehicles
+
+def adjust_gamma(image, gamma=1.0):
+    '''
+    build a lookup table mapping the pixel values [0, 255] to
+    their adjusted gamma values
+    '''
+    invGamma = 1.0 / gamma
+    table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+
+    # apply gamma correction using the lookup table
+    return cv2.LUT(image, table)

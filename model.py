@@ -27,36 +27,37 @@ def collect_data():
     not_car_images['gti'] = glob.glob('non-vehicles/GTI/*.png')
     not_car_images['extra'] = glob.glob('non-vehicles/Extras/*.png')
 
-    train_cars = []
-    test_cars = []
-    train_not_cars = []
-    test_not_cars = []
-    split_percent = 0.8
+    cars = []
+    not_cars = []
+    # split_percent = 0.8
     for key,image_list in car_images.items():
-        split = int(len(image_list)*split_percent)
-        train_cars.extend(image_list[:split])
-        test_cars.extend(image_list[split:])
+    #     split = int(len(image_list)*split_percent)
+        cars.extend(image_list[:])
+    #     test_cars.extend(image_list[split:])
     for key,image_list in not_car_images.items():
-        split = int(len(image_list)*split_percent)
-        train_not_cars.extend(image_list[:split])
-        test_not_cars.extend(image_list[split:])
+        not_cars.extend(image_list[:])
+
 
     print(' ---------------------------------------------')
-    print('|Train samples | cars: {} | not_cars: {}  |'.format(len(train_cars), len(train_not_cars)))
+    print('|samples | cars: {} | not_cars: {}  |'.format(len(cars), len(not_cars)))
     print('|---------------------------------------------|')
-    print('|Test samples  | cars: {} | not_cars: {}  |'.format(len(test_cars), len(test_not_cars)))
-    print(' ---------------------------------------------')
-
-    return train_cars, train_not_cars, test_cars, test_not_cars
+    return cars, not_cars
 
 def model():
     print('Reading dataset files ...')
-    train_cars, train_not_cars, test_cars, test_not_cars = collect_data()
+    cars, not_cars = collect_data()
     print(u'\u2713', 'Done!\n')
 
     print('Gathering features ...')
-    X_train, X_test, y_train, y_test, X_scaler = gather_features(train_cars,test_cars,train_not_cars,test_not_cars)
+    X_train, X_test, y_train, y_test, X_scaler = gather_features(cars,not_cars)
     print(u'\u2713', 'Done!\n')
+
+    print(' -----------------------------------------')
+    print('|Train set | X_train:{} y_train:{}  |'.format(len(X_train), len(y_train)))
+    print('|-----------------------------------------|')
+    print('|Test set  | X_test: {} y_test:{}     |'.format(len(X_test), len(y_test)))
+    print(' -----------------------------------------')
+
 
     joblib.dump(X_scaler, 'Xscaler.pkl')
     print(u'\u2713', 'Saved XScaler!\n')
@@ -83,7 +84,15 @@ def model():
     acc = round(svc.score(X_test, y_test), 4)
     t2 = time.time()
     print('Test Accuracy of SVC = ',acc, ' Took {}(sec):'.format(round(t2-t, 2)) )
-    filename = 'vehicle_detector_model.sav'
+
+    # Check the prediction time for 100 single sample
+    t=time.time()
+    n_predict = 100
+    svc.predict(X_test[0:n_predict])
+    t2 = time.time()
+    print('Took {} Seconds to predict {} samples'.format(round(t2-t, 4), n_predict))
+
+    filename = 'model.p'
     pickle.dump(svc, open(filename, 'wb'))
     print(u'\u2713' , 'Model Saved !')
 

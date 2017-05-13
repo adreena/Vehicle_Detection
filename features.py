@@ -4,6 +4,8 @@ import cv2
 from skimage.feature import hog
 from params import *
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+
 
 # Define a function to return HOG features and visualization
 def get_hog_features(img, orient, pix_per_cell, cell_per_block,
@@ -118,7 +120,37 @@ def process_features(imgs, color_space='RGB', spatial_size=(32, 32),
     # Return list of feature vectors
     return features
 
-def gather_features(train_cars,test_cars,train_not_cars,test_not_cars):
+def gather_features(cars,not_cars):
+    car_features = process_features(cars, color_space=color_space,
+                        spatial_size=spatial_size, hist_bins=hist_bins,
+                        orient=orient, pix_per_cell=pix_per_cell,
+                        cell_per_block=cell_per_block,
+                        hog_channel=hog_channel, spatial_feat=spatial_feat,
+                        hist_feat=hist_feat, hog_feat=hog_feat, extra=True)
+    notcar_features = process_features(not_cars, color_space=color_space,
+                            spatial_size=spatial_size, hist_bins=hist_bins,
+                            orient=orient, pix_per_cell=pix_per_cell,
+                            cell_per_block=cell_per_block,
+                            hog_channel=hog_channel, spatial_feat=spatial_feat,
+                            hist_feat=hist_feat, hog_feat=hog_feat,extra=True)
+
+    # Standardizing all x
+    X = np.vstack((car_features, notcar_features)).astype(np.float64)
+    # Fit a per-column scaler
+    x_scaler = StandardScaler().fit(X)
+    # Apply the scaler to X
+    scaled_X = x_scaler.transform(X)
+
+    # Define the labels vector
+    y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
+
+    # Split up data into randomized training and test sets
+    rand_state = np.random.randint(0, 100)
+    X_train, X_test, y_train, y_test = train_test_split(
+        scaled_X, y, test_size=0.2, random_state=rand_state)
+    return X_train,X_test,y_train,y_test, x_scaler
+
+def gather_features2(train_cars,test_cars,train_not_cars,test_not_cars):
     train_car_features = process_features(train_cars, color_space=color_space,
                         spatial_size=spatial_size, hist_bins=hist_bins,
                         orient=orient, pix_per_cell=pix_per_cell,
