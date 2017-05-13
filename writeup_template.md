@@ -191,29 +191,29 @@ I used heatmaps to separate good boxes from false positives by iterating thorugh
     <td>Detections</td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./test_images/test2.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test2.png" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test2.jpg" width="450" height="200"/></td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./test_images/test3.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test3.png" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test3.jpg" width="450" height="200"/></td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./test_images/test4.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test4.png" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test4.jpg" width="450" height="200"/></td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./test_images/test5.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test5.png" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test5.jpg" width="450" height="200"/></td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./test_images/test6.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test6.png" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test6.jpg" width="450" height="200"/></td>
   </tr>
 </table>
 
