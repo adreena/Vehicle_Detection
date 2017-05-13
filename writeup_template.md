@@ -46,11 +46,11 @@ After preparing the sets, I converted images to `YCrCb` color-space and collecte
 
 Original images size is (64, 64, 3) and contains good spatial features in each channel by showing how target object looks like, but collecting all features for all channels would generate a lot of features and slow down the classifier, yet resizing them to (32,32,3) keeps alsmot  all of the important spatial features in finding vehicles and reduces the feature-set size significantly:
  
- (code : features.py > bin_spatial()):
+ (code : src/features.py > bin_spatial()):
 
 #### 2-2.Histogram Featurs
 
-Individual histogram of the color channels is another source of information to help classifier detect structures/edges despite the variety of colors. I collected histogram features of all 3 channels. (code : features.py > color_hist())
+Individual histogram of the color channels is another source of information to help classifier detect structures/edges despite the variety of colors. I collected histogram features of all 3 channels. (code : src/features.py > color_hist())
 
 #### 2-3.Histogram of Oriented Gradients (HOG)
 
@@ -96,15 +96,15 @@ Here are some example using the `YCrCb` color space (channel 2) and HOG paramete
   </tr>
 </table>
 
-(code: parameters are located in params.py, and teh feature collector modules are in feature.py)
+(code: parameters are located in src/params.py, and teh feature collector modules are in src/feature.py)
 
 ### 3- Model 
 
 I trained 2 separate models just to see how I can improve vehicle detection:
 
-* `model1.p`, for my first model I gathered features from all of the images and used `train_test_split` to split data randomly into training-set and test-set. I then trained my LinearSVC() using YCrCB color space. Although I could see more bounding-boxes in my heatmaps, I observed a ton of false positives happening in the same wrong spot of the road sequentially! Increasing or decreasing the light in the frames just resulted in more false positives.
+* `model1.p`, for my first model I gathered features from all of the images and used `train_test_split` to split data randomly into training-set and test-set. I then trained my LinearSVC() using YCrCB color space. Although I could see more bounding-boxes in my heatmaps, I observed a ton of false positives happening in the same wrong spot of the road sequentially! Increasing or decreasing the light in the frames just resulted in more false positives.(code : model1/model.py > collect_data())
 
-* `model2.p`: To overcome this issue, I took the first `80%` of the images of each category [GTI_Far, GTI_Left, GTI_MiddleClose, GTI_Right, GTI_extracted, KITTI_extracted] as my training set, and left the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. (code : model.py > collect_data()) & (flipping the images code: features.py > process_features())
+* `model2.p`: To overcome this issue, I took the first `80%` of the images of each category [GTI_Far, GTI_Left, GTI_MiddleClose, GTI_Right, GTI_extracted, KITTI_extracted] as my training set, and left the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. (code : model2/model.py > collect_data()) & (flipping the images code: src/features.py > process_features())
  
 <table style="height: 134px; width: 612px;">
 <tbody>
@@ -163,6 +163,45 @@ I trained 2 separate models just to see how I can improve vehicle detection:
    </tbody>
 </table>
 
+models are placed into 2 separated directories :
+* model1/ [model.py, model.p pipepline.py, output_images, project_output.mp4]
+* model2/ [model.py, model.p pipepline.py, output_images, project_output.mp4] **selected model**
+
+Here is just comparison of flase positives from [-] sec for both models which shows model2 is much better in finding vehicles
+
+<table style="width:100%">
+  <tr>
+    <td>time</td>
+    <td>model1</td>
+    <td>model2</td>
+  </tr>
+  <tr>
+    <td><img src="./test_images/test2.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test2.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test2.jpg" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="./test_images/test3.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test3.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test3.jpg" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="./test_images/test4.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test4.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test4.jpg" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="./test_images/test5.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test5.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test5.jpg" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="./test_images/test6.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/test6.jpg" width="450" height="200"/></td>
+    <td><img src="./output_images/output_test6.jpg" width="450" height="200"/></td>
+  </tr>
+</table>
+
 ### 4- Pipeline & Video Implementation
 
 #### 4-1 Sliding Window Search
@@ -171,7 +210,7 @@ For each image, I extract the Hog features of the lower_half of the image once t
 
 Then for each block sub_sample I extract hog_features from the main hog_feature list and also collect color and historam feature, for normalizing my feature vector I used `StandardScaler()` and transformed image features. After normalizing the features for the block, I pass them to my classifier and get the predition and add the detections to a bounding_box list and move on to the next block.
 
-(code utils > find_cars())
+(code src/utils > find_cars())
 
 ### 4-2 Drawing boxes:
 
@@ -233,7 +272,7 @@ As my next filtering step, I check the old_counter and the current_counter :
    
    4- and the the last case is a good car ! its counter is incrementing and it's more likely to appear in the next frames.
 
-(code: Vehicle.py & utils > draw_labeled_bboxes() )
+(code: src/Vehicle.py & src/utils > draw_labeled_bboxes() )
 
 Here's a [link to my video result](./project_output.mp4)
 
