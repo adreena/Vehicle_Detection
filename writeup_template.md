@@ -63,7 +63,7 @@ Original images size is (64, 64, 3) and contains good spatial features in each c
 
 Individual histogram of the color channels is another source of information to help classifier detect structures/edges despite the variety of colors. I collected histogram features of all 3 channels. (code : features.py > color_hist())
 
-### 2-3.Histogram of Oriented Gradients (HOG)
+#### 2-3.Histogram of Oriented Gradients (HOG)
 
 For identifying the shape of an object I used `skimage.hog()` to extract the HOG gradient. After running a few experiments I picked theese parameter for the hog
 * orientations: 9 
@@ -169,51 +169,85 @@ I trained 2 separate models just to see how I can improve vehicle detection:
    </tbody>
 </table>
 
-### 4- Pipeline 
+### 4- Pipeline & Video Implementation
+
 #### 4-1 Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+For each image, I extract the Hog features of the lower_half of the image once to save time, and use sub_sampling to get all of its overlaying windows. Each window is defined by a scaling factor where a scale of 1 would result in a window that's 8 x 8 cells  that is 64 as the orginal sampling rate, with 8 cells and 8 pix per cell.
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+Then for each block sub_sample I extract hog_features from the main hog_feature list and also collect color and historam feature, for normalizing my feature vector I used `StandardScaler()` and transformed image features. After normalizing the features for the block, I pass them to my classifier and get the predition and add the detections to a bounding_box list and move on to the next block.
 
-![alt text][image3]
+(code utils > find_cars())
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+### 4-2 Drawing boxes:
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+I used heatmaps to separate good boxes from false positives by iterating thorugh bounding_box list and incrementing the value of overlapping detections. By applying a threshold of `1` I was able to remove some of the false positives, but not all of them.
 
-![alt text][image4]
+
+<table style="width:100%">
+  <tr>
+    <td>test image </td>
+    <td>Heatmap</td>
+    <td>Detections</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+</table>
+
+So I added a `Vehicle class` to my code in order to cache previous frames' bounding_boxes and do more improvements on my false positive correction. For each bounding_box, I create a vehicle object and get the center of the box, then I iterate thorugh my cached vehicles to find any matches of my existing vehicle with these new coordinates. Here are the 2 conditions to satisfy:
+
+* 1- covers_range1: if this new vehicle is in the range of +/-25 px of exisiting vehicles
+* 2- covers_range2: if this new vehicle ((topx,topy), (bottomx,bottomy)) area covers any of the existing vehicles or vice versa
+
+if the new vehicle falls into any of these conditions , I merge their bounding_boxes by getting the mean of their top & bottom cooridanates and incerement the vehicle appearance counter and also keep its old counter to do more filtering in the upcoming frames.
+
+if conditions didn't apply to the new vehicle or if the cache is empty, I just create new vehicle objects and append them to my vehicles cache. 
+
+As my next filtering step, I check the old_counter and the current_counter :
+
+ * if it's the first appearance of the vehicle (current_counter=0) I don't draw it (not removing it from my cache) but keep it in my cache to detect a 2nd appearance in the next frame. If in the next frame its counter increased, it's a sign that this detection should be a vehicle (not always true but if my classifier improves by more images I'm more confident it's a good condtion).
+ * if it's not the first appearance:
+ 
+   1- if its old_counter is equal to the current_counter, it means the vehicle is not being picked by my classifier anymore. I still give it a 2nd chance and wait for 1 more frame to check if the vehicle is going out of sight or maybe it was a false positive at first hand. In order to track update state, I added a not_updating counter in each vehicle object. 
+   
+   2- if the not_updating counter is bigger than 1 , meaning that the detection is not happening in 2 consecutive frames, I decrement its current_counter by 2, as a safety step. Doing so helps me to keep the cars that have appeared in 100 frames even more in track, however by decrementing their counters I'm making it more flexible for smooth removal of these cars from the frames.
+   
+   3- if the car not_updating counter is more than 2 and its current_counter is 0, it's a good candidate for removal from cache.
+   
+   4- and the the last case is a good car ! its counter is incrementing and it's more likely to appear in the next frames.
+
+(code: Vehicle.py & utils > draw_labeled_bboxes() )
+
+Here's a [link to my video result](./project_output.mp4)
+
+Here's a [link to my lane_line detection combined with vehicle_detection video result](./project_output.mp4)
 ---
 
-### Video Implementation
+### Discussion
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
-
-
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
-
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-### Here are six frames and their corresponding heatmaps:
-
-![alt text][image5]
-
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
-
-
----
-
-###Discussion
-
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-
+* 1- More data is needed, there is no vehicle sample of motorbikes or any other types of vehicles 
+* 2- This data is not covering all road conditions such as night/rainy roads
+* 3- Traffic situations with multiple vehicles requires very fast detection, while model is relativly slow comparing to realtime processing cases and accurate actions to slow down car or change direction.
