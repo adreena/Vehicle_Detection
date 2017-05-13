@@ -32,8 +32,8 @@ To add more data to the current data-set I flipped sample images under the same 
   <td style="width: 164px; height: 24px;">Flipped Image</td>
   </tr>
   <tr>
-  <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-  <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+  <td><img src="./documentation/orig.png" width="350" height="200"/></td>
+  <td><img src="./document/flipped.png" width="350" height="200"/></td>
   </tr>
   </tbody>
 </table>
@@ -47,17 +47,6 @@ After preparing the sets, I converted images to `YCrCb` color-space and collecte
 Original images size is (64, 64, 3) and contains good spatial features in each channel by showing how target object looks like, but collecting all features for all channels would generate a lot of features and slow down the classifier, yet resizing them to (32,32,3) keeps alsmot  all of the important spatial features in finding vehicles and reduces the feature-set size significantly:
  
  (code : features.py > bin_spatial()):
-
-<table style="width:100%">
-  <tr>
-    <td>Original(64x64x3)</td>
-    <td>Shrinked (32x32x3)</td>
-  </tr>
-  <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-  </tr>
-</table>
 
 #### 2-2.Histogram Featurs
 
