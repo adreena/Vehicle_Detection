@@ -177,8 +177,8 @@ Here is just comparison of flase positives at 00:08 sec for both models, model1 
   </tr>
   <tr>
     00:08
-    <td><img src="./documentation/model1" width="450" height="200"/></td>
-    <td><img src="./documentation/model2" width="450" height="200"/></td>
+    <td><img src="./documentation/model1.jpg" width="450" height="200"/></td>
+    <td><img src="./documentation/model2.jpg" width="450" height="200"/></td>
   </tr>
 </table>
 
