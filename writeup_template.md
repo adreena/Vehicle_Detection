@@ -29,7 +29,11 @@ To add more data to the current data-set I flipped sample images under the same 
   </tr>
   <tr>
   <td><img src="./documentation/orig.png" width="350" height="200"/></td>
-  <td><img src="./document/flipped.png" width="350" height="200"/></td>
+  <td><img src="./documentation/flipped.png" width="350" height="200"/></td>
+  </tr>
+  <tr>
+  <td><img src="./documentation/orig2.png" width="350" height="200"/></td>
+  <td><img src="./documentation/flipped2.png" width="350" height="200"/></td>
   </tr>
   </tbody>
 </table>
