@@ -19,9 +19,99 @@ Goals:
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
-### Data
+### 1-Data
 
-As it was pointed out in the Tips and Tricks for The Project, dataset images are extracted from video which results in almost similar images in a sequence of frames. Even shuffling and splitting the data in a random manner causes overfitting because images in the training set may be nearly identical to images in the test set. But just out of curiosity, I implemented 2 versions for my model:
+As it was pointed out in the Tips and Tricks for The Project, dataset images are extracted from video which results in almost similar images in a sequence of frames. Even shuffling and splitting the data in a random manner causes overfitting because images in the training set may be nearly identical to images in the test set. So, I took the first `80%` of the images of each category [GTI_Far, GTI_Left, GTI_MiddleClose, GTI_Right, GTI_extracted, KITTI_extracted] as my training set, and left the `20%` of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another But just out of curiosity, I implemented 2 versions for my model which I explain in Model section 3.
+
+To add more data to the current data-set I flipped sample images under the same label to cover more case:
+
+<table style="height: 64px; width: 319px;">
+  <tbody>
+  <tr style="height: 24px;">
+  <td style="width: 141px; text-align: center; height: 24px;">Original Image</td>
+  <td style="width: 164px; height: 24px;">Flipped Image</td>
+  </tr>
+  <tr>
+  <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+  <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+  </tr>
+  </tbody>
+</table>
+
+### 2- Features
+
+After preparing the sets, I converted images to `YCrCb` color-space and collected 3 different sets of features including:
+
+#### 2.1-Spatial Features
+
+Original images size is (64, 64, 3) and contains good spatial features in each channel by showing how target object looks like, but collecting all features for all channels would generate a lot of features and slow down the classifier, yet resizing them to (32,32,3) keeps alsmot  all of the important spatial features in finding vehicles and reduces the feature-set size significantly:
+ 
+ (code : features.py > bin_spatial()):
+
+<table style="width:100%">
+  <tr>
+    <td>Original(64x64x3)</td>
+    <td>Shrinked (32x32x3)</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+</table>
+
+#### 2-2.Histogram Featurs
+
+Individual histogram of the color channels is another source of information to help classifier detect structures/edges despite the variety of colors. I collected histogram features of all 3 channels. (code : features.py > color_hist())
+
+### 2-3.Histogram of Oriented Gradients (HOG)
+
+For identifying the shape of an object I used `skimage.hog()` to extract the HOG gradient. After running a few experiments I picked theese parameter for the hog
+* orientations: 9 
+* pix_per_cell: (8,8), I also tried (16,16) to make model train faster , but it reduced the number of vehicle detections in my pipeline
+* cell_per_block:  (2,2) I also tried (1,1) along with the (16,16) as pix_per_cell, but as mentioned in the previousl line it reduced accuracy of vehicle detection.
+
+Here are some example using the `YCrCb` color space (channel 2) and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+
+<table style="width:100%">
+  <tr>
+    <td>Car </td>
+    <td>Hog Channel 2</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td>Car </td>
+    <td>Hog Channel 2</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td>Not Car </td>
+    <td>Hog Channel 2</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td>Not Car </td>
+    <td>Hog Channel 2</td>
+  </tr>
+  <tr>
+    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+  </tr>
+</table>
+
+(code: parameters are located in params.py, and teh feature collector modules are in feature.py)
+
+### 3- Model 
+
+I trained 2 separate models just to see how I can improve vehicle detection:
 
 * `model1.p`, for my first model I gathered features from all of the images and used `train_test_split` to split data randomly into training-set and test-set. I then trained my LinearSVC() using YCrCB color space. Although I could see more bounding-boxes in my heatmaps, I observed a ton of false positives happening in the same wrong spot of the road sequentially! Increasing or decreasing the light in the frames just resulted in more false positives.
 
@@ -79,82 +169,8 @@ As it was pointed out in the Tips and Tricks for The Project, dataset images are
    </tbody>
 </table>
 
-Flipped sample image:
-
-<table style="height: 64px; width: 319px;">
-  <tbody>
-  <tr style="height: 24px;">
-  <td style="width: 141px; text-align: center; height: 24px;">Original Image</td>
-  <td style="width: 164px; height: 24px;">&nbsp;Flipped</td>
-  </tr>
-  <tr style="height: 60px;">
-  <td style="width: 141px; height: 60px;"><img src="./document/combined-1.png" width="450" height="200"/></td>
-  <td style="width: 164px; height: 60px;"><img src="./document/combined-1.png" width="450" height="200"/></td>
-  </tr>
-  </tbody>
-</table>
-
-### Features
-
-After preparing the sets, I converted images to `YCrCb` color-space and collected 3 different sets of features including:
-
-### 1.Spatial Features
-
-Original images size is (64, 64, 3) and contains good spatial features in each channel by showing how target object looks like, but collecting all features for all channels would generate a lot of features and slow down the classifier, yet resizing them to (32,32,3) keeps important spatial features in finding vehicles and reduces the feature-set size significantly:
- 
- (code : features.py > bin_spatial()):
-
-<table style="width:100%">
-  <tr>
-    <td>Original(64x64x3)</td>
-    <td>Shrinked (32x32x3)</td>
-  </tr>
-  <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-  </tr>
-</table>
-
-### 2.Histogram Featurs
-
-Individual histogram of the color channels is another source of information to help classifier detect structures/edges despite the variety of colors. I collected histogram features of all 3 channels : WHY 32???
-(code : features.py > color_hist())
-<table style="width:100%">
-  <tr>
-    <td>Original(64x64x3)</td>
-    <td>Channel 1</td>
-    <td>Channel 2</td>
-    <td>Channel 3</td>
-  </tr>
-  <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-     <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-  </tr>
-</table>
-
-
-### 3.Histogram of Oriented Gradients (HOG)
-
-![alt text][image1]
-
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
-
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
-
-
-![alt text][image2]
-
-####2. Explain how you settled on your final choice of HOG parameters.
-
-I tried various combinations of parameters and...
-
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
-
-I trained a linear SVM using...
-
-###Sliding Window Search
+### 4- Pipeline 
+#### 4-1 Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
