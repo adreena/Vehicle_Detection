@@ -43,7 +43,7 @@ def pipeline(image, file_name=''):
     bboxes = find_cars(im, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size, hist_bins, color_space)
     heat = add_heat(heat,bboxes)
     # Apply threshold to help remove false positives
-    heat = apply_threshold(heat,0.8)
+    heat = apply_threshold(heat,1)
 
     # Visualize the heatmap when displaying
     heatmap = np.clip(heat, 0, 255)
