@@ -23,65 +23,63 @@ Goals:
 
 As it was pointed out in the Tips and Tricks for The Project, dataset images are extracted from video which results in almost similar images in a sequence of frames. Even shuffling and splitting the data in a random manner causes overfitting because images in the training set may be nearly identical to images in the test set. But just out of curiosity, I implemented 2 versions for my model:
 
-* first model `bad_model.p` gathers features from all of the images and uses to split data randomly into training-set and test-set. I then trained my LinearSVC() using YCrCB color space, accuracy ~9. Although I could see the more bounding-boxes in my heatmaps, I observed a ton of false positives happening in the same wrong spot of the road sequentially! Increasing or decreasing the light in the frames just resulted in more false positives.
+* `model1.p`, for my first model I gathered features from all of the images and used `train_test_split` to split data randomly into training-set and test-set. I then trained my LinearSVC() using YCrCB color space. Although I could see more bounding-boxes in my heatmaps, I observed a ton of false positives happening in the same wrong spot of the road sequentially! Increasing or decreasing the light in the frames just resulted in more false positives.
 
- <table style="width:100%">
-  <tr>
-    <td>Total Samples</td>
-    <td> cars: 8792 </td>
-    <td> not_cars: 8968 </td>
-  </tr>
-  <tr>
-    <td>Train Set</td>
-    <td> X_train:14208  </td>
-    <td> y_train:14208 </td>
-  </tr>
-  <tr>
-    <td>Test Set</td>
-    <td> X_test: 3552  </td>
-    <td> y_test:3552 </td>
-  </tr>
-  <tr>
-    <td>Model</td>
-    <td> Feature Vector: 3600  </td>
-    <td> Accuracy: 0.9907 </td>
-    <td> Training Time: 6.26s </td>
-  </tr>
+* `model2.p`: To overcome this issue, I took the first `80%` of the images of each category [GTI_Far, GTI_Left, GTI_MiddleClose, GTI_Right, GTI_extracted, KITTI_extracted] as my training set, and left the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. (code : model.py > collect_data())
+
+ here is an example of a car-image an its flipped version :
+ 
+<table style="height: 134px; width: 612px;">
+<tbody>
+<tr style="height: 13px;">
+<td style="width: 83px; height: 13px;">&nbsp;</td>
+<td style="width: 277px; text-align: center; height: 13px;" colspan="2">&nbsp;model_2 (my good&nbsp;model)</td>
+<td style="width: 265px; text-align: center; height: 13px;" colspan="2">model_1</td>
+</tr>
+<tr style="height: 59px;">
+<td style="width: 83px; height: 59px;">Samples</td>
+<td style="width: 126px; height: 59px;">
+<p>&nbsp;train_cars: 7302</p>
+<p>&nbsp;test_cars: 1760</p>
+</td>
+<td style="width: 151px; height: 59px;">
+<p>&nbsp;train_not_cars: 7174</p>
+<p>&nbsp;test_not_cars: &nbsp;1794</p>
+</td>
+<td style="width: 101px; height: 59px;">&nbsp;cars: 8792</td>
+<td style="width: 164px; height: 59px;">&nbsp;not_cars: 8968</td>
+</tr>
+<tr style="height: 13px;">
+<td style="width: 83px; height: 13px;">Train set</td>
+<td style="width: 126px; height: 13px;">&nbsp;X_train: 28412</td>
+<td style="width: 151px; height: 13px;">&nbsp;y_train : 28412</td>
+<td style="width: 101px; height: 13px;">&nbsp;X_train:14208</td>
+<td style="width: 164px; height: 13px;">&nbsp; y_train:14208</td>
+</tr>
+<tr style="height: 13px;">
+<td style="width: 83px; height: 13px;">Test set</td>
+<td style="width: 126px; height: 13px;">&nbsp;X_test: 3554</td>
+<td style="width: 151px; height: 13px;">&nbsp;y_test : 3554</td>
+<td style="width: 101px; height: 13px;">&nbsp;X_test: 3552</td>
+<td style="width: 164px; height: 13px;">&nbsp;y_test:3552</td>
+</tr>
+<tr style="height: 13px;">
+<td style="width: 83px; height: 13px;">&nbsp;Accuracy</td>
+<td style="width: 126px; height: 13px;" colspan="2">0.9834&nbsp;&nbsp;</td>
+<td style="width: 101px; height: 13px;" colspan="2">&nbsp; 0.9907</td>
+</tr>
+<tr style="height: 13px;">
+<td style="width: 83px; height: 13px;">Training time</td>
+<td style="width: 126px; height: 13px;" colspan="2">&nbsp;10.95 sec</td>
+<td style="width: 101px; height: 13px;" colspan="2">6.26 sec</td>
+</tr>
+<tr style="height: 13px;">
+<td style="width: 83px; height: 13px;">Prediction Time for 100 label</td>
+<td style="width: 126px; height: 13px;" colspan="2">0.0009 sec</td>
+<td style="width: 101px; height: 13px;" colspan="2">0.00005</td>
+</tr>
+</tbody>
 </table>
-
-
-* To overcome this issue, I took the first 80% of the images of each category as my training set, and left the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. 
-
-(code : model.py > collect_data())
-
- ---------------------------------------------
-|Train samples | cars: 7032 | not_cars: 7174  |
-|---------------------------------------------|
-|Test samples  | cars: 1760 | not_cars: 1794  |
- ---------------------------------------------
- 
- To generate more data, I added flipped images to each set under the same label, here is an example of a car-image an its flipped version 
- 
- (code : features.py > process_features() > 110-118):
- 
- <table style="width:100%">
-  <tr>
-    <td>Original</td>
-    <td>Flipped</td>
-  </tr>
-  <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-  </tr>
-</table>
-
-Total number of images after adding flipped images (cars+not-cars):
- -----------------------------------------
-|Train set | X_train:28412 y_train:28412  |
-|-----------------------------------------|
-|Test set  | X_test: 3554 y_test:3554     |
- -----------------------------------------
-
 
 ### Features
 
