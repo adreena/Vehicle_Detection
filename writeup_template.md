@@ -14,10 +14,6 @@ The goals / steps of this project are the following:
 Goals:
 * Developing a robust pipeline to detect vehicles on the road
 
-
-## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
-
 ---
 ### 1-Data
 
@@ -32,8 +28,8 @@ To add more data to the current data-set I flipped sample images under the same 
   <td style="width: 164px; height: 24px;">Flipped Image</td>
   </tr>
   <tr>
-  <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-  <td><img src="./document/combined-1.png" width="450" height="200"/></td>
+  <td><img src="./documentation/orig.png" width="350" height="200"/></td>
+  <td><img src="./document/flipped.png" width="350" height="200"/></td>
   </tr>
   </tbody>
 </table>
@@ -47,17 +43,6 @@ After preparing the sets, I converted images to `YCrCb` color-space and collecte
 Original images size is (64, 64, 3) and contains good spatial features in each channel by showing how target object looks like, but collecting all features for all channels would generate a lot of features and slow down the classifier, yet resizing them to (32,32,3) keeps alsmot  all of the important spatial features in finding vehicles and reduces the feature-set size significantly:
  
  (code : features.py > bin_spatial()):
-
-<table style="width:100%">
-  <tr>
-    <td>Original(64x64x3)</td>
-    <td>Shrinked (32x32x3)</td>
-  </tr>
-  <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
-  </tr>
-</table>
 
 #### 2-2.Histogram Featurs
 
@@ -78,32 +63,32 @@ Here are some example using the `YCrCb` color space (channel 2) and HOG paramete
     <td>Hog Channel 2</td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./documentation/car_sample.png" width="350" height="200"/></td>
+    <td><img src="./documentation/car_sample_hog.png" width="350" height="200"/></td>
   </tr>
   <tr>
     <td>Car </td>
     <td>Hog Channel 2</td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./documentation/car_sample2.png" width="350" height="200"/></td>
+    <td><img src="./documentation/car_sample2_hog.png" width="350" height="200"/></td>
   </tr>
   <tr>
     <td>Not Car </td>
     <td>Hog Channel 2</td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./documentation/not_car_sample.png" width="350" height="200"/></td>
+    <td><img src="./documentation/not_car_sample_hog.png" width="350" height="200"/></td>
   </tr>
   <tr>
     <td>Not Car </td>
     <td>Hog Channel 2</td>
   </tr>
   <tr>
-    <td><img src="./document/combined-1.png" width="450" height="200"/></td>
-    <td><img src="./document/combined-2.png" width="450" height="200"/></td>
+    <td><img src="./documentation/not_car_sample2.png" width="350" height="200"/></td>
+    <td><img src="./documentation/not_car_sample2_hog.png" width="350" height="200"/></td>
   </tr>
 </table>
 
@@ -243,7 +228,8 @@ As my next filtering step, I check the old_counter and the current_counter :
 
 Here's a [link to my video result](./project_output.mp4)
 
-Here's a [link to my lane_line detection combined with vehicle_detection video result](./project_output.mp4)
+Here's a [link to my lane_line detection combined with vehicle_detection video result](./project_combined_output.mp4)
+
 ---
 
 ### Discussion
