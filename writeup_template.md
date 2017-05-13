@@ -177,23 +177,23 @@ Here is just comparison of flase positives at 00:08 sec for both models, model1 
   </tr>
   <tr>
     <td>1</td>
-    <td><img src="./documentation/model1_1.jpg" width="450" height="200"/></td>
-    <td><img src="./documentation/model2_1.jpg" width="450" height="200"/></td>
+    <td><img src="./documentation/model1_1.png" width="450" height="200"/></td>
+    <td><img src="./documentation/model2_1.png" width="450" height="200"/></td>
   </tr>
   <tr>
     <td>2</td>
-    <td><img src="./documentation/model1_2.jpg" width="450" height="200"/></td>
-    <td><img src="./documentation/model2_2.jpg" width="450" height="200"/></td>
+    <td><img src="./documentation/model1_2.png" width="450" height="200"/></td>
+    <td><img src="./documentation/model2_2.png" width="450" height="200"/></td>
   </tr>
   <tr>
     <td>3</td>
-    <td><img src="./documentation/model1_3.jpg" width="450" height="200"/></td>
-    <td><img src="./documentation/model2_3.jpg" width="450" height="200"/></td>
+    <td><img src="./documentation/model1_3.png" width="450" height="200"/></td>
+    <td><img src="./documentation/model2_3.png" width="450" height="200"/></td>
   </tr>
   <tr>
     <td>4</td>
-    <td><img src="./documentation/model1_4.jpg" width="450" height="200"/></td>
-    <td><img src="./documentation/model2_4.jpg" width="450" height="200"/></td>
+    <td><img src="./documentation/model1_4.png" width="450" height="200"/></td>
+    <td><img src="./documentation/model2_4.png" width="450" height="200"/></td>
   </tr>
 </table>
 
