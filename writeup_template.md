@@ -142,22 +142,22 @@ I trained 2 separate models just to see how I can improve vehicle detection:
    </tr>
    <tr style="height: 13px;">
    <td style="width: 83px; height: 13px;">&nbsp;Accuracy</td>
-   <td style="width: 126px; height: 13px;" colspan="2">0.9834</td>
+   <td style="width: 126px; height: 13px;" colspan="2">0.9899</td>
    <td style="width: 101px; height: 13px;" colspan="2">0.993</td>
    </tr>
    <tr style="height: 13px;">
    <td style="width: 83px; height: 13px;">Training time</td>
-   <td style="width: 126px; height: 13px;" colspan="2">10.95 sec</td>
+   <td style="width: 126px; height: 13px;" colspan="2">36.92 sec</td>
    <td style="width: 101px; height: 13px;" colspan="2">43.65 sec</td>
    </tr>
    <tr style="height: 13px;">
    <td style="width: 83px; height: 13px;">Prediction Time for 100 label</td>
-   <td style="width: 126px; height: 13px;" colspan="2">0.0009 sec</td>
+   <td style="width: 126px; height: 13px;" colspan="2">0.0006 sec</td>
    <td style="width: 101px; height: 13px;" colspan="2">0.0008 sec</td>
    </tr>
    <tr style="height: 13px;">
    <td style="width: 83px; height: 13px;">Feature Vector Length</td>
-   <td style="width: 126px; height: 13px;" colspan="2"></td>
+   <td style="width: 126px; height: 13px;" colspan="2">8460</td>
    <td style="width: 101px; height: 13px;" colspan="2">8460</td>
    </tr>
    </tbody>
