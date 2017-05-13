@@ -78,32 +78,32 @@ Here are some example using the `YCrCb` color space (channel 2) and HOG paramete
     <td>Hog Channel 2</td>
   </tr>
   <tr>
-    <td><img src="./documentation/car_sample.png" width="450" height="200"/></td>
-    <td><img src="./documentation/car_sample_hog.png" width="450" height="200"/></td>
+    <td><img src="./documentation/car_sample.png" width="350" height="200"/></td>
+    <td><img src="./documentation/car_sample_hog.png" width="350" height="200"/></td>
   </tr>
   <tr>
     <td>Car </td>
     <td>Hog Channel 2</td>
   </tr>
   <tr>
-    <td><img src="./documentation/car_sample2.png" width="450" height="200"/></td>
-    <td><img src="./documentation/car_sample2_hog.png" width="450" height="200"/></td>
+    <td><img src="./documentation/car_sample2.png" width="350" height="200"/></td>
+    <td><img src="./documentation/car_sample2_hog.png" width="350" height="200"/></td>
   </tr>
   <tr>
     <td>Not Car </td>
     <td>Hog Channel 2</td>
   </tr>
   <tr>
-    <td><img src="./documentation/not_car_sample.png" width="450" height="200"/></td>
-    <td><img src="./documentation/not_car_sample_hog.png" width="450" height="200"/></td>
+    <td><img src="./documentation/not_car_sample.png" width="350" height="200"/></td>
+    <td><img src="./documentation/not_car_sample_hog.png" width="350" height="200"/></td>
   </tr>
   <tr>
     <td>Not Car </td>
     <td>Hog Channel 2</td>
   </tr>
   <tr>
-    <td><img src="./documentation/not_car_sample2.png" width="450" height="200"/></td>
-    <td><img src="./documentation/not_car_sample2_hog.png" width="450" height="200"/></td>
+    <td><img src="./documentation/not_car_sample2.png" width="350" height="200"/></td>
+    <td><img src="./documentation/not_car_sample2_hog.png" width="350" height="200"/></td>
   </tr>
 </table>
 
