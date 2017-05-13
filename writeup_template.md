@@ -7,7 +7,7 @@ The goals / steps of this project are the following:
 * Step 3: Training classifier LinearSVM on the extracted features
 * Step 4: Calculating accuracy of the model using test set images
 * Step 5: Searching for vehicles by sliding window over the image and using trained model
-* Step 6: Comparing new detected vehicles with the vehicles from the previous frames and merging bounding-boxes if necessary, using heatmap and boxes' areas
+* Step 6: Comparing new detected vehicles with the vehicles from the previous frames and merging bounding-boxes if necessary, using heatmap and boxes' areas and centers
 * Step 7: Avoiding false positive bounding boxes to appear on the frames
 * Step 6: Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
@@ -21,7 +21,36 @@ Goals:
 ---
 ### Data
 
-As it was pointed out in the Tips and Tricks for The Project, dataset images are extracted from video which results in almost identical images in a sequence of frames. Even shuffling and splitting the data in a random manner causes overfitting because images in the training set may be nearly identical to images in the test set. To overcome this issue, I take the first 80% of the images of each category and put them in training set and leave the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. 
+As it was pointed out in the Tips and Tricks for The Project, dataset images are extracted from video which results in almost similar images in a sequence of frames. Even shuffling and splitting the data in a random manner causes overfitting because images in the training set may be nearly identical to images in the test set. But just out of curiosity, I implemented 2 versions for my model:
+
+* first model `bad_model.p` gathers features from all of the images and uses to split data randomly into training-set and test-set. I then trained my LinearSVC() using YCrCB color space, accuracy ~9. Although I could see the more bounding-boxes in my heatmaps, I observed a ton of false positives happening in the same wrong spot of the road sequentially! Increasing or decreasing the light in the frames just resulted in more false positives.
+
+ <table style="width:100%">
+  <tr>
+    <td>Total Samples</td>
+    <td> cars: 8792 </td>
+    <td> not_cars: 8968 </td>
+  </tr>
+  <tr>
+    <td>Train Set</td>
+    <td> X_train:14208  </td>
+    <td> y_train:14208 </td>
+  </tr>
+  <tr>
+    <td>Test Set</td>
+    <td> X_test: 3552  </td>
+    <td> y_test:3552 </td>
+  </tr>
+  <tr>
+    <td>Model</td>
+    <td> Feature Vector: 3600  </td>
+    <td> Accuracy: 0.9907 </td>
+    <td> Training Time: 6.26s </td>
+  </tr>
+</table>
+
+
+* To overcome this issue, I took the first 80% of the images of each category as my training set, and left the 20% of them for testing the model, this helps keeping time-series images in either training-set or testing-set and not in both to make sure train and test images are sufficiently different from one another. 
 
 (code : model.py > collect_data())
 
