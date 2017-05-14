@@ -264,7 +264,7 @@ As my next filtering step, I check the old_counter and the current_counter :
    
    2- if the not_updating counter is bigger than 1 , meaning that the detection is not happening in 2 consecutive frames, I decrement its current_counter by 2, as a safety step. Doing so helps me to keep the cars that have appeared in a lot of frames like in 100 continuouse frame even more in track, however by decrementing their counters I'm making it more flexible for a smoother exit of these cars from the frames.
    
-   3- if the car not_updating counter is more than 2 and its current_counter is 0, it's a good candidate for removal from cache.
+   3- if the car's not_updating counter is more than 2 and its current_counter is 0, it's a good candidate for removal from cache.
    
    4- and the the last case is a good car ! its counter is incrementing and it's more likely to appear in the next frames.
 
