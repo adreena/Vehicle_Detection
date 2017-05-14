@@ -256,7 +256,8 @@ if conditions didn't apply to the new vehicle or if the cache is empty, I just c
 
 As my next filtering step, I check the old_counter and the current_counter :
 
- * if it's the first appearance of the vehicle (current_counter=0) I don't draw it (not removing it from my cache) but keep it in my cache to detect a 2nd appearance in the next frame. If in the next frame its counter increased, it's a sign that this detection should be a vehicle (not always true but if my classifier improves by more images I'm more confident it's a good condtion).
+ * if it's the first appearance of the vehicle (current_counter=0) I don't draw it (not removing it from my cache) but keep it in my cache to detect a 2nd appearance in the next frame. If in the next frame its counter increased, it's a sign that this detection should be a vehicle (not always true but if my classifier improves by more images I'm more confident it's a good condtion), otherwise I drop it from my cached vehicles.
+ 
  * if it's not the first appearance:
  
    1- if its old_counter is equal to the current_counter, it means the vehicle is not being picked by my classifier anymore. I still give it a 2nd chance and wait for 1 more frame to check if the vehicle is going out of sight or maybe it was a false positive at first hand. In order to track update state, I added a not_updating counter in each vehicle object. 
