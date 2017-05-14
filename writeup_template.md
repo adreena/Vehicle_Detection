@@ -262,7 +262,7 @@ As my next filtering step, I check the old_counter and the current_counter :
  
    1- if its old_counter is equal to the current_counter, it means the vehicle is not being picked by my classifier anymore. I still give it a 2nd chance and wait for 1 more frame to check if the vehicle is going out of sight or maybe it was a false positive at first hand. In order to track update state, I added a not_updating counter in each vehicle object. 
    
-   2- if the not_updating counter is bigger than 1 , meaning that the detection is not happening in 2 consecutive frames, I decrement its current_counter by 2, as a safety step. Doing so helps me to keep the cars that have appeared in 100 frames even more in track, however by decrementing their counters I'm making it more flexible for smooth removal of these cars from the frames.
+   2- if the not_updating counter is bigger than 1 , meaning that the detection is not happening in 2 consecutive frames, I decrement its current_counter by 2, as a safety step. Doing so helps me to keep the cars that have appeared in a lot of frames like in 100 continuouse frame even more in track, however by decrementing their counters I'm making it more flexible for a smoother exit of these cars from the frames.
    
    3- if the car not_updating counter is more than 2 and its current_counter is 0, it's a good candidate for removal from cache.
    
