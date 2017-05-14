@@ -171,14 +171,29 @@ Here is just comparison of flase positives at 00:08 sec for both models, model1 
 
 <table style="width:100%">
   <tr>
-    <td>time</td>
+    <td>Frame</td>
     <td>model1</td>
     <td>model2</td>
   </tr>
   <tr>
-    <td>00:08</td>
-    <td><img src="./documentation/model1.jpg" width="450" height="200"/></td>
-    <td><img src="./documentation/model2.jpg" width="450" height="200"/></td>
+    <td>1</td>
+    <td><img src="./documentation/model1_1.png" width="450" height="200"/></td>
+    <td><img src="./documentation/model2_1.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><img src="./documentation/model1_2.png" width="450" height="200"/></td>
+    <td><img src="./documentation/model2_2.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><img src="./documentation/model1_3.png" width="450" height="200"/></td>
+    <td><img src="./documentation/model2_3.png" width="450" height="200"/></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td><img src="./documentation/model1_4.png" width="450" height="200"/></td>
+    <td><img src="./documentation/model2_4.png" width="450" height="200"/></td>
   </tr>
 </table>
 
@@ -241,14 +256,15 @@ if conditions didn't apply to the new vehicle or if the cache is empty, I just c
 
 As my next filtering step, I check the old_counter and the current_counter :
 
- * if it's the first appearance of the vehicle (current_counter=0) I don't draw it (not removing it from my cache) but keep it in my cache to detect a 2nd appearance in the next frame. If in the next frame its counter increased, it's a sign that this detection should be a vehicle (not always true but if my classifier improves by more images I'm more confident it's a good condtion).
+ * if it's the first appearance of the vehicle (current_counter=0) I don't draw it (not removing it from my cache) but keep it in my cache to detect a 2nd appearance in the next frame. If in the next frame its counter increased, it's a sign that this detection should be a vehicle (not always true but if my classifier improves by more images I'm more confident it's a good condtion), otherwise I drop it from my cached vehicles.
+ 
  * if it's not the first appearance:
  
    1- if its old_counter is equal to the current_counter, it means the vehicle is not being picked by my classifier anymore. I still give it a 2nd chance and wait for 1 more frame to check if the vehicle is going out of sight or maybe it was a false positive at first hand. In order to track update state, I added a not_updating counter in each vehicle object. 
    
-   2- if the not_updating counter is bigger than 1 , meaning that the detection is not happening in 2 consecutive frames, I decrement its current_counter by 2, as a safety step. Doing so helps me to keep the cars that have appeared in 100 frames even more in track, however by decrementing their counters I'm making it more flexible for smooth removal of these cars from the frames.
+   2- if the not_updating counter is bigger than 1 , meaning that the detection is not happening in 2 consecutive frames, I decrement its current_counter by 2, as a safety step. Doing so helps me to keep the cars that have appeared in a lot of frames like in 100 continuouse frame even more in track, however by decrementing their counters I'm making it more flexible for a smoother exit of these cars from the frames.
    
-   3- if the car not_updating counter is more than 2 and its current_counter is 0, it's a good candidate for removal from cache.
+   3- if the car's not_updating counter is more than 2 and its current_counter is 0, it's a good candidate for removal from cache.
    
    4- and the the last case is a good car ! its counter is incrementing and it's more likely to appear in the next frames.
 
@@ -256,7 +272,7 @@ As my next filtering step, I check the old_counter and the current_counter :
 
 Here's a [link to my video result](./project_output.mp4)
 
-Here's a [link to my lane_line detection combined with vehicle_detection video result](./project_combined_output.mp4)
+Here's a [link to my lane_line detection combined with vehicle_detection video result](./video_output_combined.mp4)
 
 ---
 
