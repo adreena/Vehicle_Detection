@@ -272,7 +272,7 @@ As my next filtering step, I check the old_counter and the current_counter :
 
 Here's a [link to my video result](./project_output.mp4)
 
-Here's a [link to my lane_line detection combined with vehicle_detection video result](./project_combined_output.mp4)
+Here's a [link to my lane_line detection combined with vehicle_detection video result](./video_output_combined.mp4)
 
 ---
 
